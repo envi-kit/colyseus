@@ -14,10 +14,10 @@ export default config({
          * Define your room handlers:
          */
         gameServer.define('Lobby', MyRoom);
-        gameServer.define('Summit', MyRoom);
-        gameServer.define('Session', MyRoom);
-        gameServer.define('Networking', MyRoom);
-        gameServer.define('Exhibition', MyRoom);
+        gameServer.define('Stage', MyRoom);
+        gameServer.define('ExhibitionArea', MyRoom);
+        gameServer.define('NetworkingArea', MyRoom);
+        gameServer.define('SessionRoom', MyRoom);
     },
 
     initializeExpress: (app) => {
