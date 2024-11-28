@@ -1,24 +1,26 @@
-import { MapSchema, Schema, type } from '@colyseus/schema'
+import { MapSchema, Schema, type } from '@colyseus/schema';
 
-
-export class Position extends Schema {
-    @type('number') positionX: number
-    @type('number') positionY: number
-    @type('number') positionZ: number
-    @type('number') rotationX: number
-    @type('number') rotationY: number
-    @type('number') rotationZ: number
-    @type('number') rotationW: number
-}
 
 export class PlayerState extends Schema {
+    @type('number') posX: number
+    @type('number') posY: number
+    @type('number') posZ: number
+    @type('number') rotY: number
+    @type('boolean') teleport: boolean
+}
+
+export class PlayerActions extends Schema {
+    @type('number') animation: number
+    @type('number') emoji: number
+}
+
+export class PlayerSettings extends Schema {
     @type('string') nickname: string
-    @type('string') avatarModelName: string
-    @type('string') action: string
+    @type('string') avatarId: string
 }
 
 export class BasicSchema extends Schema {
-    // @type({ map: Player }) players = new MapSchema<Player>()
-    @type({ map: Position }) positions = new MapSchema<Position>()
-    @type({ map: PlayerState }) playerStates = new MapSchema<PlayerState>()
+    @type({ map: PlayerState }) playerState = new MapSchema<PlayerState>()
+    @type({ map: PlayerActions }) playerActions = new MapSchema<PlayerActions>()
+    @type({ map: PlayerSettings }) playerSettings = new MapSchema<PlayerSettings>()
 }
