@@ -1,5 +1,5 @@
 import { Room, Client } from '@colyseus/core'
-import { BasicSchema } from './schema/BasicSchema'
+import { BasicSchema, PlayerActions, PlayerSettings, PlayerState } from './schema/BasicSchema';
 
 export class MyRoom extends Room<BasicSchema> {
     onCreate(options: any) {
@@ -8,64 +8,57 @@ export class MyRoom extends Room<BasicSchema> {
         this.setPatchRate(100)
         this.maxClients = 32
 
-        // this.onMessage('ping', (client) => {
-        //     console.log(client.sessionId, "pong")
-        // })
+        this.onMessage("updateState", (client, data) => {
+            const playerState = this.state.playerState.get(client.sessionId)
+            playerState.posX = data.posX
+            playerState.posY = data.posY
+            playerState.posZ = data.posX
+            playerState.rotY = data.rotY
+            playerState.teleport = data.teleport
+        })
 
-        // this.onMessage("updatePosition", (client, data) => {
-        //     const position = this.state.positions.get(client.sessionId)
+        this.onMessage('updateActions', (client, data) => {
+            const playerActions = this.state.playerActions.get(client.sessionId);
+            playerActions.animation = data.animation
+            playerActions.emoji = data.emoji
+        })
 
-        //     position.positionX = data.position.x
-        //     position.positionY = data.position.y
-        //     position.positionZ = data.position.z
-    
-        //     position.rotationX = data.rotation.x
-        //     position.rotationY = data.rotation.y
-        //     position.rotationZ = data.rotation.z
-        //     position.rotationW = data.rotation.w
-        // })
-
-        // this.onMessage('updatePlayerState', (client, data) => {
-        //     const playerState = this.state.playerStates.get(client.sessionId);
-
-        //     playerState.nickname = data.nickname
-        //     playerState.avatarModelName = data.avatarModelName
-        //     playerState.action = data.action
-        // })
+        this.onMessage('updateSettings', (client, data) => {
+            const playerSettings = this.state.playerSettings.get(client.sessionId);
+            playerSettings.nickname = data.nickname
+            playerSettings.avatarId = data.avatarId
+        })
     }
 
     onJoin(client: Client, options: any) {
         console.log(client.sessionId, 'joined!')
 
-        // const position = new Position()
+        const playerState = new PlayerState()
+        playerState.posX = options.playerState?.posX ?? 0
+        playerState.posY = options.playerState?.posY ?? 0
+        playerState.posZ = options.playerState?.posX ?? 0
+        playerState.rotY = options.playerState?.rotY ?? 0
+        playerState.teleport = options.playerState?.teleport ?? false
 
-        // console.log(options)
+        const playerActions = new PlayerActions()
+        playerActions.animation = options.playerActions?.animation ?? 0
+        playerActions.emoji = options.playerActions?.emoji ?? 0
 
-        // position.positionX = options.position.x
-        // position.positionY = options.position.y
-        // position.positionZ = options.position.z
-
-        // position.rotationX = 0
-        // position.rotationY = 0
-        // position.rotationZ = 0
-        // position.rotationW = 0
-
-        // this.state.positions.set(client.sessionId, position)
+        const playerSettings = new PlayerSettings()
+        playerSettings.nickname = options.playerSettings?.nickname ?? ''
+        playerSettings.avatarId = options.playerSettings?.avatarId ?? ''
 
 
-        // const playerState = new PlayerState()
-
-        // playerState.nickname = options.params.nickname
-        // playerState.avatarModelName = options.params.avatarModelName
-        // playerState.action = options.params.action
-
-        // this.state.playerStates.set(client.sessionId, playerState)
+        this.state.playerState.set(client.sessionId, playerState)
+        this.state.playerActions.set(client.sessionId, playerActions)
+        this.state.playerSettings.set(client.sessionId, playerSettings)
     }
 
     onLeave(client: Client, consented: boolean) {
         console.log(client.sessionId, 'left!')
-        // this.state.positions.delete(client.sessionId)
-        // this.state.playerStates.delete(client.sessionId)
+        this.state.playerState.delete(client.sessionId)
+        this.state.playerActions.delete(client.sessionId)
+        this.state.playerSettings.delete(client.sessionId)
     }
 
     onDispose() {
