@@ -4,12 +4,12 @@ import { BasicSchema, PlayerActions, PlayerSettings, PlayerState } from './schem
 export class MyRoom extends Room<BasicSchema> {
     onCreate(options: any) {
         this.setState(new BasicSchema())
-
         this.setPatchRate(100)
         this.maxClients = 32
 
         this.onMessage("updateState", (client, data) => {
             const playerState = this.state.playerState.get(client.sessionId)
+
             playerState.posX = data.posX
             playerState.posY = data.posY
             playerState.posZ = data.posX
@@ -31,7 +31,7 @@ export class MyRoom extends Room<BasicSchema> {
     }
 
     onJoin(client: Client, options: any) {
-        console.log(client.sessionId, 'joined!')
+        console.log(client.sessionId, 'joined!', options)
 
         const playerState = new PlayerState()
         playerState.posX = options.playerState?.posX ?? 0
