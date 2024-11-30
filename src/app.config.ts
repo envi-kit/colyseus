@@ -13,11 +13,11 @@ export default config({
         /**
          * Define your room handlers:
          */
-        gameServer.define('Lobby', MyRoom);
-        gameServer.define('Stage', MyRoom);
-        gameServer.define('ExhibitionArea', MyRoom);
-        gameServer.define('NetworkingArea', MyRoom);
-        gameServer.define('SessionRoom', MyRoom);
+        gameServer.define('Violet', MyRoom);
+        gameServer.define('Pink', MyRoom);
+        gameServer.define('Yellow', MyRoom);
+        gameServer.define('RedBlue', MyRoom);
+        gameServer.define('Red', MyRoom);
     },
 
     initializeExpress: (app) => {
