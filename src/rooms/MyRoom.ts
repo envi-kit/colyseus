@@ -12,7 +12,7 @@ export class MyRoom extends Room<BasicSchema> {
 
             playerState.posX = data.posX
             playerState.posY = data.posY
-            playerState.posZ = data.posX
+            playerState.posZ = data.posZ
             playerState.rotY = data.rotY
             playerState.teleport = data.teleport
         })
